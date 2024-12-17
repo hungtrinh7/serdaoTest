@@ -1,68 +1,46 @@
-# Transactions Management App
+# Transaction Management App
 
-A React Native application for managing transactions, tracking balances, and saving data locally using AsyncStorage.
-
-## Prerequisites
-
-Ensure you have the following installed on your machine:
-
-- Node.js (version 14 or higher)
-- npm or Yarn
-- React Native CLI or Expo CLI (depending on your setup)
+This project is a simple React-based application that allows users to manage transactions, track balances, and store transaction data using AsyncStorage.
 
 ## Installation
 
-Follow the steps below to install and run the project locally:
-
-1. **Clone the Repository**:
-
+1. Clone the repository:
    ```bash
-   git clone <repository_url>
-   cd <repository_name>
+   git clone https://github.com/hungtrinh7/serdaoTest
    ```
 
-2. **Install Dependencies**:
-   Using npm:
+````
 
+2. Navigate to the project directory:
+
+   ```bash
+   cd serdaoTest
+   ```
+
+3. Install the required dependencies:
    ```bash
    npm install
    ```
 
-   Or using Yarn:
+## Running the Application
+
+1. Start the development server:
 
    ```bash
-   yarn install
+   npm start
    ```
 
-3. **Run the Application**:
-   For iOS (requires macOS):
+2. Open the app in your browser by navigating to `http://localhost:3000`.
 
-   ```bash
-   npx react-native run-ios
-   ```
+## Available Scripts
 
-   For Android:
+### `npm start`
 
-   ```bash
-   npx react-native run-android
-   ```
+Runs the app in development mode. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-4. **Start the Metro Bundler** (if not already running):
-   ```bash
-   npx react-native start
-   ```
+The page will reload if you make edits. You will also see any lint errors in the console.
 
-## Usage
+### `npm run build`
 
-- Add transactions specifying an amount and a beneficiary.
-- Automatically updates and saves the balance and transaction history.
-- Data is persisted locally using AsyncStorage.
-
-## Commands Overview
-
-| Command                         | Description                                |
-| ------------------------------- | ------------------------------------------ |
-| `npm install` or `yarn install` | Install all project dependencies.          |
-| `npx react-native run-ios`      | Run the app on an iOS simulator.           |
-| `npx react-native run-android`  | Run the app on an Android emulator/device. |
-| `npx react-native start`        | Start the Metro Bundler for the project.   |
+Builds the app for production to the `build` folder. It correctly bundles React in production mode and optimizes the build for the best performance.
+````
