@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { View, Text, Button, FlatList, StyleSheet } from "react-native";
 import { useTransactions } from "../contexts/TransactionContext";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "@/interfaces/Navigation";
 
@@ -15,48 +14,21 @@ type Props = {
 };
 
 const HomeScreen = ({ navigation }: Props) => {
-  const { transactions, balance, setTransactions, setBalance } =
-    useTransactions();
-
-  useEffect(() => {
-    const removeValue = async () => {
-      try {
-        await AsyncStorage.removeItem("transactions");
-        await AsyncStorage.removeItem("balance");
-        await AsyncStorage.removeItem("beneficiaries");
-      } catch (e) {
-        // remove error
-      }
-    };
-    // removeValue();
-
-    const getData = async () => {
-      const jsonTransactions = await AsyncStorage.getItem("transactions");
-      const transactionsStorage =
-        jsonTransactions != null ? JSON.parse(jsonTransactions) : null;
-      setTransactions(transactionsStorage ?? transactions);
-
-      const getBalanceFromStorage = await AsyncStorage.getItem("balance");
-      const balanceStorage =
-        getBalanceFromStorage != null
-          ? parseFloat(getBalanceFromStorage)
-          : 1000;
-      setBalance(balanceStorage);
-    };
-    getData();
-  }, []);
+  const { transactions, balance } = useTransactions();
 
   const renderItem = ({ item }: { item: Transaction }) => (
     <View style={styles.item}>
       <Text style={styles.itemText}>Transaction ID: {item.id.toString()}</Text>
       <Text style={styles.itemText}>Amount: ${item.amount.toFixed(2)}</Text>
-      {item.beneficiary && (
+      {item.beneficiary ? (
         <>
           <Text style={styles.itemText}>
-            To: {item.beneficiary.lastname + " " + item.beneficiary.firstname}
+            To: {item.beneficiary.lastname} {item.beneficiary.firstname}
           </Text>
           <Text style={styles.itemText}>IBAN: {item.beneficiary.iban}</Text>
         </>
+      ) : (
+        <Text style={styles.itemText}>No beneficiary</Text>
       )}
     </View>
   );
@@ -78,6 +50,7 @@ const HomeScreen = ({ navigation }: Props) => {
         data={transactions}
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderItem}
+        extraData={transactions} // Assure un rendu uniquement quand les données changent
         contentContainerStyle={styles.listContainer}
       />
     </View>

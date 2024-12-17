@@ -1,16 +1,10 @@
-import { storeDataObject } from "@/lib/async-storage";
-import React, {
-  createContext,
-  useState,
-  useContext,
-  useEffect,
-  PropsWithChildren,
-} from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { createContext, useState, useContext, useEffect } from "react";
 
 type BeneficiaryContextInterface = {
   beneficiaries: Beneficiary[];
-  addBeneficiary: (value: Beneficiary) => void;
-  setBeneficiaries: (value: Beneficiary[]) => void;
+  addBeneficiary: (beneficiary: Beneficiary) => void;
+  setBeneficiaries: React.Dispatch<React.SetStateAction<Beneficiary[]>>;
 };
 
 const BeneficiaryContext = createContext<BeneficiaryContextInterface>({
@@ -21,8 +15,42 @@ const BeneficiaryContext = createContext<BeneficiaryContextInterface>({
 
 export const useBeneficiaries = () => useContext(BeneficiaryContext);
 
-export const BeneficiaryProvider = ({ children }: PropsWithChildren) => {
-  const [beneficiaries, setBeneficiaries] = useState<Array<Beneficiary>>([]);
+export const BeneficiaryProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const [beneficiaries, setBeneficiaries] = useState<Beneficiary[]>([]);
+
+  // Get stored data
+  useEffect(() => {
+    const loadBeneficiaries = async () => {
+      try {
+        const storedBeneficiaries = await AsyncStorage.getItem("beneficiaries");
+        if (storedBeneficiaries) {
+          setBeneficiaries(JSON.parse(storedBeneficiaries));
+        }
+      } catch (error) {
+        console.error("Failed to load beneficiaries:", error);
+      }
+    };
+
+    loadBeneficiaries();
+  }, []);
+
+  // Sauvegarde des données à chaque mise à jour
+  useEffect(() => {
+    const saveBeneficiaries = async () => {
+      try {
+        await AsyncStorage.setItem(
+          "beneficiaries",
+          JSON.stringify(beneficiaries)
+        );
+      } catch (error) {
+        console.error("Failed to save beneficiaries:", error);
+      }
+    };
+
+    saveBeneficiaries();
+  }, [beneficiaries]);
 
   const addBeneficiary = (beneficiary: Beneficiary) => {
     const newBeneficiary = {
@@ -36,10 +64,6 @@ export const BeneficiaryProvider = ({ children }: PropsWithChildren) => {
       newBeneficiary,
     ]);
   };
-
-  useEffect(() => {
-    storeDataObject(beneficiaries, "beneficiaries");
-  }, [beneficiaries]);
 
   return (
     <BeneficiaryContext.Provider

@@ -6,11 +6,12 @@ import React, {
   PropsWithChildren,
 } from "react";
 import { storeData, storeDataObject } from "../lib/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type TransactionContextInterface = {
   transactions: Transaction[];
   addTransaction: (amount: string, beneficiary: Beneficiary) => void;
-  balance: Number;
+  balance: number;
   setTransactions: (value: Array<Transaction>) => void;
   setBalance: (value: number) => void;
 };
@@ -29,12 +30,38 @@ export const TransactionProvider = ({ children }: PropsWithChildren) => {
   const [transactions, setTransactions] = useState<Array<Transaction>>([]);
   const [balance, setBalance] = useState(1000);
 
-  const addTransaction = (amount: string, beneficiary: Beneficiary) => {
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      try {
+        const savedTransactions = await AsyncStorage.getItem("transactions");
+        if (savedTransactions) {
+          setTransactions(JSON.parse(savedTransactions));
+        }
+
+        const savedBalance = await AsyncStorage.getItem("balance");
+        if (savedBalance) {
+          setBalance(parseFloat(savedBalance));
+        }
+      } catch (error) {
+        console.error(
+          "Erreur lors de la récupération des données initiales :",
+          error
+        );
+      }
+    };
+
+    fetchInitialData();
+  }, []);
+
+  const addTransaction = (
+    amount: string,
+    beneficiary: Beneficiary
+  ): boolean => {
     const amountFloat = parseFloat(amount);
 
     if (balance < amountFloat) {
-      alert(`You don't have enough money!`);
-      return;
+      console.error(`Fonds insuffisants pour effectuer cette transaction.`);
+      return false; // Retourne false pour signaler l'échec
     }
 
     const newTransaction: Transaction = {
@@ -52,13 +79,23 @@ export const TransactionProvider = ({ children }: PropsWithChildren) => {
     setBalance((prevBalance) => {
       const newBalance = prevBalance - amountFloat;
       storeData(newBalance.toString(), "balance");
-
-      return prevBalance - amountFloat;
+      return newBalance;
     });
+
+    return true; // Transaction ok
   };
 
   useEffect(() => {
-    storeDataObject(transactions, "transactions");
+    const saveTransactions = async () => {
+      try {
+        await storeDataObject(transactions, "transactions");
+        console.log("Transactions sauvegardées", transactions);
+      } catch (error) {
+        console.error("Erreur lors de la sauvegarde des transactions :", error);
+      }
+    };
+
+    saveTransactions();
   }, [transactions]);
 
   return (

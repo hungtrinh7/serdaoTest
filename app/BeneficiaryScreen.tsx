@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   View,
   TextInput,
@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import { useBeneficiaries } from "../contexts/beneficiaryContext";
 import * as IBAN from "iban-ts";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "@/interfaces/Navigation";
 
@@ -26,8 +25,7 @@ const BeneficiaryScreen = ({ navigation }: Props) => {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [iban, setIban] = useState("");
-  const { addBeneficiary, beneficiaries, setBeneficiaries } =
-    useBeneficiaries();
+  const { addBeneficiary, beneficiaries } = useBeneficiaries();
 
   const handleBeneficiary = () => {
     // check if Iban is valid before adding
@@ -35,13 +33,12 @@ const BeneficiaryScreen = ({ navigation }: Props) => {
       alert("Invalid IBAN");
       return false;
     }
-    const beneficiary: Beneficiary = {
+    addBeneficiary({
       id: Date.now(),
       firstname,
       lastname,
       iban,
-    };
-    addBeneficiary(beneficiary);
+    });
     navigation.goBack();
   };
 
@@ -58,17 +55,6 @@ const BeneficiaryScreen = ({ navigation }: Props) => {
       )}
     </View>
   );
-
-  // get data from storage or get current beneficiaries if no data storage
-  useEffect(() => {
-    const getData = async () => {
-      const jsonBeneficiaries = await AsyncStorage.getItem("beneficiaries");
-      const beneficiariesStorage =
-        jsonBeneficiaries != null ? JSON.parse(jsonBeneficiaries) : null;
-      setBeneficiaries(beneficiariesStorage ?? beneficiaries);
-    };
-    getData();
-  }, []);
 
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>

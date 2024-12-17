@@ -11,8 +11,8 @@ const Stack = createNativeStackNavigator();
 
 export default function RootLayout() {
   return (
-    <TransactionProvider>
-      <BeneficiaryProvider>
+    <BeneficiaryProvider>
+      <TransactionProvider>
         <Stack.Navigator>
           <Stack.Screen name="HomeScreen" component={HomeScreen} />
           <Stack.Screen
@@ -24,7 +24,7 @@ export default function RootLayout() {
             component={BeneficiaryScreen}
           />
         </Stack.Navigator>
-      </BeneficiaryProvider>
-    </TransactionProvider>
+      </TransactionProvider>
+    </BeneficiaryProvider>
   );
 }
