@@ -1,23 +1,68 @@
-# Introduction
+# Transactions Management App
 
-We're thrilled to have you at this stage of our selection process! This test is designed to assess your skills and approach to problem-solving in a practical scenario. Please carefully follow the instructions below and ensure you read through the entire document. Good luck!
+A React Native application for managing transactions, tracking balances, and saving data locally using AsyncStorage.
 
-# Set up the Project
+## Prerequisites
 
-A significant challenge when working with React Native is setting up a complete environment before being able to run the project. We have intentionally omitted these instructions to assess your ability to independently set up said environment.
+Ensure you have the following installed on your machine:
 
-# Test
+- Node.js (version 14 or higher)
+- npm or Yarn
+- React Native CLI or Expo CLI (depending on your setup)
 
-You will be working on an application that facilitates transactions to beneficiaries. To successfully complete the test, you will need to implement the following features:
+## Installation
 
-- Introduce a new page to create a beneficiary, including fields for their first name, last name, and IBAN. Additionally, incorporate an IBAN validator to ensure the IBAN's validity.
-- Enable the selection of a beneficiary from a list when making a transaction.
-- Preserve the state of the application so that upon reopening, the list of beneficiaries, transaction history, and balance are retained.
+Follow the steps below to install and run the project locally:
 
-Note: you have free rein in how you want to implement this test, give it you best shot!
+1. **Clone the Repository**:
 
-# Result
+   ```bash
+   git clone <repository_url>
+   cd <repository_name>
+   ```
 
-Please create a new Git repository to store both the test first version and your modifications. Document all the commands needed to install and launch this project, excluding the installation of any external SDKs/platforms, our focus will remain strictly on this project.
+2. **Install Dependencies**:
+   Using npm:
 
-We hope that you will enjoy taking this test, best of luck!
+   ```bash
+   npm install
+   ```
+
+   Or using Yarn:
+
+   ```bash
+   yarn install
+   ```
+
+3. **Run the Application**:
+   For iOS (requires macOS):
+
+   ```bash
+   npx react-native run-ios
+   ```
+
+   For Android:
+
+   ```bash
+   npx react-native run-android
+   ```
+
+4. **Start the Metro Bundler** (if not already running):
+   ```bash
+   npx react-native start
+   ```
+
+## Usage
+
+- Add transactions specifying an amount and a beneficiary.
+- Automatically updates and saves the balance and transaction history.
+- Data is persisted locally using AsyncStorage.
+
+## Commands Overview
+
+| Command                         | Description                                |
+| ------------------------------- | ------------------------------------------ |
+| `npm install` or `yarn install` | Install all project dependencies.          |
+| `npx react-native run-ios`      | Run the app on an iOS simulator.           |
+| `npx react-native run-android`  | Run the app on an Android emulator/device. |
+| `npx react-native start`        | Start the Metro Bundler for the project.   |
